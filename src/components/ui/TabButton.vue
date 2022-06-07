@@ -1,5 +1,5 @@
 <template>
-     <button class="w-1/5 sm:w-auto">
+     <button class="w-1/5 text-xs sm:w-auto sm:text-lg">
           <div
             class="tab"
             :class="{ selectedTab: param === tabID,
