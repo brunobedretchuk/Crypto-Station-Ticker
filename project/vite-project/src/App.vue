@@ -1,5 +1,3 @@
-
-
 <template>
  <div class="container-fluid bg-black">
    <nav-bar> </nav-bar>
@@ -38,12 +36,7 @@ opacity: 0;
 .route-enter-active{
 transition: all .5s;
 }
-.route-enter-to{
 
-}
-.route-leave-from{
-opacity: 1;
-}
 .route-leave-active{
 transition: all .25s;
 }
