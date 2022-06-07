@@ -32,11 +32,7 @@ const store = createStore({
     searchAllData(state, payload) {
       if(payload){
         state.allData = payload;
-
       }
-    },
-    setActivePage(state, payload) {
-      state.activePage = payload;
     },
     updatePriceVarData(state, payload) {
       state.allData.market_data.current_price.usd = payload.market_data.current_price.usd;
@@ -50,7 +46,7 @@ const store = createStore({
     },
     updatePriceVarData(context , payload){
       const data = payload;
-     context.commit('updatePriceData' , data);
+     context.commit('updatePriceVarData' , data);
     },
   },
   getters: {
