@@ -1,5 +1,5 @@
 ```
-- Firebase deploy: https://dev-inventory-cdbd9.web.app/
+[Firebase deploy](https://dev-inventory-cdbd9.web.app/)
 ```
 ## Vue 3 + Vite
 ### Recommended IDE Setup
