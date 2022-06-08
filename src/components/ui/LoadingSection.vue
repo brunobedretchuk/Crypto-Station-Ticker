@@ -1,3 +1,4 @@
+//this component is rendered while a request to the API is still loading
 <template>
     <div class="flex justify-center">
         <img

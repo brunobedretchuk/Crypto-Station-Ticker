@@ -6,6 +6,7 @@ const store = createStore({
 
   state() {
     return {
+      
       allData: {
         "id": "",
         "symbol": "",
@@ -25,15 +26,16 @@ const store = createStore({
             },
     }
   },
-      dataReady: false,
     };
   },
   mutations: {
+    //mutation to make allData assume a new coin
     searchAllData(state, payload) {
       if(payload){
         state.allData = payload;
       }
     },
+    //mutation to change current coin's price and 24hVariation
     updatePriceVarData(state, payload) {
       state.allData.market_data.current_price.usd = payload.market_data.current_price.usd;
       state.allData.market_data.price_change_percentage_24h = payload.market_data.price_change_percentage_24h
@@ -50,12 +52,15 @@ const store = createStore({
     },
   },
   getters: {
+    //returns coin whole object
     getAllData(state){
       return state.allData
     },
+    //returns price (number)
     getPriceData(state){
       return state.allData.market_data.current_price.usd
     },
+    // returns variation in 24h (percentage)
     getVarData(state){
       return state.allData.market_data.price_change_percentage_24h
     }

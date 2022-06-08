@@ -208,6 +208,8 @@ export default {
     },
   },
   created() {
+    // watches whenever the value of params changes, so the application fetches new
+    // data and resets the page's content
     this.$watch(
       () => this.param, (newParam) => {
           this.fetchData();
@@ -217,7 +219,10 @@ export default {
     );
   },
   mounted() {
+    //fetch data when page first loads
     this.fetchData();
+    //every 5 seconds, application makes a request to the API for an update on
+    //price and/or 24h variation
     setInterval(this.fetchPriceVar, 5000);
   },
 };
@@ -257,6 +262,7 @@ export default {
     background-color: white;
     color: #a071ff;
 }
+/* animation for when a new coin loads */
 .coin-enter-from,
 .coin-leave-to {
     opacity: 0;
@@ -265,6 +271,7 @@ export default {
 .coin-leave-active {
     transition: all 0.15s;
 }
+/* animation for when user searches for historical price data */
 .hPrice-enter-from,
 .hPrice-leave-to {
     opacity: 0;

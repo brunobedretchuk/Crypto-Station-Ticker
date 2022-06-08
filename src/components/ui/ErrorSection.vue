@@ -1,3 +1,4 @@
+//This components is relative to what should be rendered in case an error occurs when the search coin by id is executed
 <template>
     <div class="mx-4 lg:mx-40 2xl:mx-80 coin text-center">
         <h1 class="text-red-500">Sorry, we could not find the specified coin</h1>

@@ -1,3 +1,4 @@
+// component used for the first page accessed by the user
 <template>
   <div class="flex justify-center">
     <transition name="welcome" appear>

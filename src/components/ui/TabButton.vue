@@ -1,3 +1,5 @@
+//this component is responsible for each individual tab rendered at the top section of
+// the CoinModal component
 <template>
      <button class="w-1/5 text-xs sm:w-auto sm:text-lg">
           <div
@@ -14,6 +16,13 @@
 </template>
 
 <script>
+//tabButton receives three props from the parent Component
+// 'name' determines the string that will be displayed inside the tab
+// 'param' receives the param string from the URL
+// 'tabID' receives a string that contains the coin's ID
+// when the respective tab is selected, param and tabID should be equal, thus applying
+// to the component a dynamic class called '.selectedTab' that will change it's background color
+
 export default {
     props: ['name' , 'param' , 'tabID']
 }
