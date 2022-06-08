@@ -16,7 +16,7 @@
       <div class="inputTab flex justify-center gap-1 md:justify-start">
         <span>
             <form @submit.prevent="searchCoin($refs.input.value)">
-                <input type="text" class="text-gray-400 mr-2 pl-2 rounded-md w-40"
+                <input id="input1" type="text" class="text-gray-400 mr-2 pl-2 rounded-md w-40"
             placeholder="search coin by id" ref="input"/>
           <button class="baseButton">search</button>
             </form>
@@ -66,8 +66,9 @@
                     class="text-gray-400 px-2 rounded-lg"
                     type="date"
                     ref="dateInput"
+                    id="input2"
                   />
-                  <button class="baseButton">search</button>
+                  <button class="baseButton" id="histButton">search</button>
                 </span>
               </form>
             </div>
@@ -200,7 +201,7 @@ export default {
     },
     searchCoin(input) {
       this.$refs.input.value = "";
-      this.$router.push(`/dashboard/${input}`);
+      this.$router.push(`/dashboard/${input.toLowerCase()}`);
     },
     getCurrency(value) {
       return value.toLocaleString("en-US", {minimumFractionDigits: 2, maximumFractionDigits: 4, style: "currency", currency: "USD"});
