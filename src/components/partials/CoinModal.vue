@@ -210,8 +210,7 @@ export default {
         const res = await this.$http.get(`https://api.coingecko.com/api/v3/coins/${this.param}/market_chart?vs_currency=usd&days=${diffInDays}'`);
 
         let pricesArr = res.data.prices;
-        console.log(pricesArr)
-
+      
         let closest = pricesArr.reduce(function(prev, curr) {
         return (Math.abs(curr[0] - moment) < Math.abs(prev[0] - moment) ? curr : prev);
         });
