@@ -61,12 +61,14 @@ it('Get Historical Price Data', () => {
       cy.url().should('include' , '/dashboard/bitcoin')
       cy.wait(1000)
       cy.get('#input2')
-      .type('2020-05-20')
+      .type('2022-05-20')
       cy.get('#histButton').click()
       cy.wait(1000)
       
       cy.get('#input2')
-      .type('2020-08-19')
+      .type('2022-05-20')
+      cy.get('#input3')
+      .type('11:56')
       cy.get('#histButton').click()
       cy.wait(1000)
       

@@ -55,8 +55,9 @@
             </div>
             <div class="my-8"></div>
             <div class="flex gap-2 items-center px-1 border-l-2">
-              <span class="flex items-end gap-2">
+              <span class="flex items-center gap-2">
                 <p class="text-lg">Historical Price</p>
+                <p class="text-sm">(UTC)</p>
               </span>
             </div>
             <div class="flex gap-2 items-center px-1 border-l-2">
@@ -67,6 +68,13 @@
                     type="date"
                     ref="dateInput"
                     id="input2"
+                  />
+                  <input
+                    class="text-gray-400 px-2 rounded-lg"
+                    type="time"
+                    ref="timeInput"
+                    id="input3"
+                    v-model="timeInput"
                   />
                   <button class="baseButton" id="histButton">search</button>
                 </span>
@@ -112,6 +120,7 @@ export default {
       currPrice: 0,
       var24: 0,
       error: false,
+      timeInput: '01:00'
     };
   },
   watch: {
@@ -184,16 +193,36 @@ export default {
         console.log(e);
       }
     },
-    // makes a get request to the API for the current coin being displayed, using the date input, it will recover the appropriate historical information
+    // makes a get request to the API for the current coin being displayed, using the date and time inputs. by default, time is set to 01:00
+    // the function operates by getting the difference between the current date and the inputted date. This is required by the API to make the request
+    // the API retrieves an array with a great number of moments (an array with two elements: time in MS and the price at that moment, ie: [1654048976643 , 31931.70])
+    // the closest variable gets the closest moment  to the one inputted, foundPrice then stores the correspondent price, thus retrieving the historical price requested
     async getHistoricalPrice() {
       try {
-        const date = this.$refs.dateInput.value;
-        const dateStr = `${date.slice(8)}-${date.slice(5, 7)}-${date.slice(0,4)}`;
-        const res = await this.$http.get(`https://api.coingecko.com/api/v3/coins/${this.param}/history?date=${dateStr}&localization=false`);
-        this.historicalPrice = res.data.market_data.current_price.usd.toLocaleString("en-US", {minimumFractionDigits: 2, maximumFractionDigits: 4, style: "currency", currency: "USD"});
+        const dateInput = this.$refs.dateInput.value;
+        const timeInput = this.timeInput;
+
+        let date1 = new Date(dateInput)
+        let dateNow = new Date(Date.now())
+        let diffInDays = this.dateDiffInDays(date1 , dateNow)
+        let moment = Date.parse(`${dateInput} ${timeInput} UTC`)
+
+        const res = await this.$http.get(`https://api.coingecko.com/api/v3/coins/${this.param}/market_chart?vs_currency=usd&days=${diffInDays}'`);
+
+        let pricesArr = res.data.prices;
+        console.log(pricesArr)
+
+        let closest = pricesArr.reduce(function(prev, curr) {
+        return (Math.abs(curr[0] - moment) < Math.abs(prev[0] - moment) ? curr : prev);
+        });
+
+        let foundPrice = this.filterPriceArray(closest , pricesArr);
+
+        
+        this.historicalPrice = foundPrice.toLocaleString("en-US", {minimumFractionDigits: 2, maximumFractionDigits: 4, style: "currency", currency: "USD"});
       } catch (e) {
         this.historicalPrice = "Sorry, data not available for the referred date";
-        this.$refs.dateInput.value = "";
+        // this.$refs.dateInput.value = "";
       }
     },
     selectTab(tab) {
@@ -206,7 +235,19 @@ export default {
     getCurrency(value) {
       return value.toLocaleString("en-US", {minimumFractionDigits: 2, maximumFractionDigits: 4, style: "currency", currency: "USD"});
     },
+    dateDiffInDays(a, b) {
+  const _MS_PER_DAY = 1000 * 60 * 60 * 24;
+  const utc1 = Date.UTC(a.getFullYear(), a.getMonth(), a.getDate());
+  const utc2 = Date.UTC(b.getFullYear(), b.getMonth(), b.getDate());
+
+  return Math.floor((utc2 - utc1) / _MS_PER_DAY);
+},
+    filterPriceArray(closest , pricesArr){
+      let [chosenArr] = pricesArr.filter(el => el === closest)
+      return chosenArr[1]
+    }
   },
+
   created() {
     // watches whenever the value of params changes, so the application fetches new
     // data and resets the page's content
