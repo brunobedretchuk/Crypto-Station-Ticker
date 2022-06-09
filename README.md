@@ -87,11 +87,10 @@ Then, these params are dynamically inserted inside each http request
 In this way, it is possible to access any cryptocurrency inside the Coingecko API.
 Also, the code performs a new request to the API everytime the parameters in the URL change.
 
-Second, the historical data is retrieved from the API's tool that provides historical price. It is important to say that one of the project's demands was to be able to retrieve price from a specific date and hour. After looking several times for such tool, I could only find an endpoint from the server that provided me with a price relative to an inserted date. I could not find any tool that allowed me to refine the search to specific hours in that day.
-This request is made through a submission of a form with a date input, which is made as such:
+Second, the historical data is retrieved from the API's tool that provides historical price, based on data provided by the user (date and hour). This request is made through a submission of a form with a date input and a time input, which are made as such:
 
 ```Javascript
-const res = await this.$http.get(`https://api.coingecko.com/api/v3/coins/${this.param}/history?date=${dateStr}&localization=false`);
+ const res = await this.$http.get(`https://api.coingecko.com/api/v3/coins/${this.param}/market_chart?vs_currency=usd&days=${diffInDays}'`);
 ```
 
 Each cryptocurrency's object returned from a request is temporarily (until a new request is made) stored inside Vuex's Store. This means all data necessary is always available to the whole application.
