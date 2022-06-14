@@ -217,7 +217,7 @@ export default {
         });
 
         let foundPrice = this.filterPriceArray(closest , pricesArr);
-
+        console.log(moment , closest)
         
         this.historicalPrice = foundPrice.toLocaleString("en-US", {minimumFractionDigits: 2, maximumFractionDigits: 4, style: "currency", currency: "USD"});
       } catch (e) {
