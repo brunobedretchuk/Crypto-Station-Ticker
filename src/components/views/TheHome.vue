@@ -4,7 +4,7 @@
     <transition name="welcome" appear>
       <div class="modal flex justify-around items-center flex-col mt-10">
         <div class="text-center">
-          <h1 class="text-xl">Welcome to dacxi's Cryptocurrency Platform,</h1>
+          <h1 class="text-xl">Welcome to the Cryptocurrency Platform,</h1>
           <h2 class="text-sm text-white mt-5">
             click the button below to access all services available!
           </h2>

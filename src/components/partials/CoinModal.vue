@@ -7,7 +7,6 @@
        <!-- Tabs to Select main Coins -->
        <tab-button @click="selectTab('bitcoin')" name="Bitcoin" :param="param" tabID="bitcoin"></tab-button>
        <tab-button @click="selectTab('ethereum')" name="Ethereum" :param="param" tabID="ethereum"></tab-button>
-       <tab-button @click="selectTab('dacxi')" name="Dacxi" :param="param" tabID="dacxi"></tab-button>
        <tab-button @click="selectTab('terra-luna-2')" name="Luna" :param="param" tabID="terra-luna-2"></tab-button>
        <tab-button @click="selectTab('cosmos')" name="Cosmos" :param="param" tabID="cosmos"></tab-button>
       </div>
@@ -62,7 +61,7 @@
             </div>
             <div class="flex gap-2 items-center px-1 border-l-2">
               <form @submit.prevent="getHistoricalPrice">
-                <span class="flex items-end gap-2">
+                <span class="flex flex-wrap items-end gap-2">
                   <input
                     class="text-gray-400 px-2 rounded-lg"
                     type="date"
