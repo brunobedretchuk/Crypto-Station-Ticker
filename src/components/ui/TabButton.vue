@@ -1,7 +1,7 @@
 //this component is responsible for each individual tab rendered at the top section of
 // the CoinModal component
 <template>
-     <button class="w-1/5 text-xs sm:w-auto sm:text-lg">
+     <button class="w-1/4 text-xs sm:w-auto sm:text-lg">
           <div
             class="tab"
             :class="{ selectedTab: param === tabID,
@@ -33,9 +33,9 @@ export default {
       padding: 0.5rem 1rem;
     }
 .tab:hover {
-  background-color: #8a62db;
+  background-color: #413768;
 }
 .selectedTab {
-  background-color: #8a62db;
+  background-color: #413768;
 }
 </style>

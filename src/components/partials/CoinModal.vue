@@ -2,7 +2,7 @@
   <main class="main">
     
     <!-- Top Section of the main Window -->
-    <div class="coinTabs rounded-t-lg flex flex-col justify-between mt-20 mx-4 lg:mx-40 2xl:mx-80 md:flex-row">
+    <div class="coinTabs rounded-t-lg flex flex-col justify-between md:flex-row">
       <div class="flex justify-between md:justify-start">
        <!-- Tabs to Select main Coins -->
        <tab-button @click="selectTab('bitcoin')" name="Bitcoin" :param="param" tabID="bitcoin"></tab-button>
@@ -26,7 +26,7 @@
 <!-- Bottom Section of the main window -->
     <transition name="coin" mode="out-in">
       <!-- Section that will be displayed if there are no errors and loading is finished -->
-      <div v-if="!isLoading" class="mx-4 lg:mx-40 2xl:mx-80 coin">
+      <div v-if="!isLoading" class="coin">
         <div :key="param">
           <div class="mb-4">
             <div class="flex gap-2 items-center">
@@ -49,7 +49,7 @@
                 <p :class="{
                     'text-red-500': parseFloat(coinVariation) < 0,
                     'text-green-500': parseFloat(coinVariation) >= 0,
-                  }">{{ plusSign }} {{ var24 }}%</p><p>(24h)</p>
+                  }">{{ plusSign }} {{ var24.toFixed(2) }}%</p><p>(24h)</p>
               </span>
             </div>
             <div class="my-8"></div>
@@ -147,14 +147,7 @@ export default {
     },
      // computed property that reacts to the coin's price (currency) that was loaded via fetchData and fetchPriceVar
     coinPrice() {
-      const x = this.$store.getters.getPriceData.toLocaleString("en-US", {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 4,
-        style: "currency",
-        currency: "USD",
-      });
-
-      return x;
+      return this.convertNumtoPrice(this.$store.getters.getPriceData);
     },
      // computed property that reacts to the coin's last 24h variation in price that was loaded via fetchData and fetchPriceVar
     coinVariation() {
@@ -172,9 +165,7 @@ export default {
     async fetchData() {
       try {
         this.isLoading = true;
-        const res = await this.$http.get(
-          `https://api.coingecko.com/api/v3/coins/${this.param}?localization=false&tickers=false&market_data=true&community_data=false&developer_data=false&sparkline=false`
-        );
+        const res = await this.$http.get(this.getApiUrls('idSearch' , this.param));
         this.$store.dispatch("searchAllData", res.data);
         this.isLoading = false;
       } catch (e) {
@@ -184,9 +175,7 @@ export default {
     // makes a get request to the API, using the URL parameters as a reference. Will serve to update coin Price and 24h variation values only, every 5 seconds
     async fetchPriceVar() {
       try {
-        const res = await this.$http.get(
-          `https://api.coingecko.com/api/v3/coins/${this.param}?localization=false&tickers=false&market_data=true&community_data=false&developer_data=false&sparkline=false`
-        );
+        const res = await this.$http.get(this.getApiUrls('idSearch' , this.param));
         this.$store.dispatch("updatePriceVarData", res.data);
       } catch (e) {
         console.log(e);
@@ -206,7 +195,7 @@ export default {
         let diffInDays = this.dateDiffInDays(date1 , dateNow)
         let moment = Date.parse(`${dateInput} ${timeInput} UTC`)
 
-        const res = await this.$http.get(`https://api.coingecko.com/api/v3/coins/${this.param}/market_chart?vs_currency=usd&days=${diffInDays}'`);
+        const res = await this.$http.get(this.getApiUrls('historicalSearch' , this.param , diffInDays));
 
         let pricesArr = res.data.prices;
 
@@ -218,7 +207,7 @@ export default {
         let foundPrice = this.filterPriceArray(closest , pricesArr);
         console.log(moment , closest)
         
-        this.historicalPrice = foundPrice.toLocaleString("en-US", {minimumFractionDigits: 2, maximumFractionDigits: 4, style: "currency", currency: "USD"});
+        this.historicalPrice = this.convertNumtoPrice(foundPrice)
       } catch (e) {
         this.historicalPrice = "Sorry, data not available for the referred date";
         // this.$refs.dateInput.value = "";
@@ -232,7 +221,7 @@ export default {
       this.$router.push(`/dashboard/${input.toLowerCase()}`);
     },
     getCurrency(value) {
-      return value.toLocaleString("en-US", {minimumFractionDigits: 2, maximumFractionDigits: 4, style: "currency", currency: "USD"});
+      return this.convertNumtoPrice(value)
     },
     dateDiffInDays(a, b) {
   const _MS_PER_DAY = 1000 * 60 * 60 * 24;
@@ -244,6 +233,17 @@ export default {
     filterPriceArray(closest , pricesArr){
       let [chosenArr] = pricesArr.filter(el => el === closest)
       return chosenArr[1]
+    },
+    convertNumtoPrice(num){
+      return num.toLocaleString("en-US", {minimumFractionDigits: 2, maximumFractionDigits: 4, style: "currency", currency: "USD"});
+    },
+    getApiUrls(requestName, param1 , ...param2){
+      if (requestName === 'idSearch'){
+        return `https://api.coingecko.com/api/v3/coins/${param1}?localization=false&tickers=false&market_data=true&community_data=false&developer_data=false&sparkline=false`
+      }
+      else if (requestName === 'historicalSearch'){
+        return `https://api.coingecko.com/api/v3/coins/${param1}/market_chart?vs_currency=usd&days=${param2}'`
+      }
     }
   },
 
@@ -276,21 +276,15 @@ export default {
     border-radius: 0px 0px 10px 10px;
 }
 .coinTabs {
-    background-color: #a071ff;
+    background-color: #5e548e;
     color: white;
 }
 .inputTab {
     padding: 0.5rem 1rem;
 }
 
-.tab {
-    padding: 0.5rem 1rem;
-}
-.tab:hover {
-    background-color: #8a62db;
-}
 .selectedTab {
-    background-color: #8a62db;
+    background-color: #4a4e69;
 }
 .baseButton {
     border: 1px solid white;
@@ -300,7 +294,7 @@ export default {
 }
 .baseButton:hover {
     background-color: white;
-    color: #a071ff;
+    color: #4a4e69;
 }
 /* animation for when a new coin loads */
 .coin-enter-from,
